@@ -136,21 +136,16 @@ function crearTiendaHTML(tienda) {
         "tienda";
 
 const linkTienda =
-    "../Tienda/index.html?tienda=" +
+    "https://shoptiendaonline47-ctrl.github.io/SHOPTIENDA/?tienda=" +
     encodeURIComponent(
         tienda.slug
     );
-
     div.innerHTML = `
 
         <div class="informacion-tienda">
 
             <span class="nombre-tienda">
                 ${escapeHTML(tienda.nombre)}
-            </span>
-
-            <span class="link-tienda">
-                ${escapeHTML(linkTienda)}
             </span>
 
         </div>
