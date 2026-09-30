@@ -136,12 +136,11 @@ function crearTiendaHTML(tienda) {
         "tienda";
 
 
-    const linkTienda =
-        "../Tienda/index.html?tienda=" +
-        encodeURIComponent(
-            tienda.slug
-        );
-
+   const linkTienda =
+    "https://shoptiendaonline47-ctrl.github.io/SHOPTIENDA/?tienda=" +
+    encodeURIComponent(
+        tienda.slug
+    );
 
     div.innerHTML = `
 
