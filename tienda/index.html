@@ -1,0 +1,4556 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Mi Tienda</title>
+
+<link rel="stylesheet"
+      href="estilos.css">
+
+<style>
+
+/* =====================================================
+   PRODUCTOS
+===================================================== */
+
+.contenido-cliente {
+    padding-top: 4px;
+}
+
+
+/* =====================================================
+   OFERTA / SORTEO
+===================================================== */
+
+.contenedor-botones-producto {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.etiqueta-oferta-cliente,
+.etiqueta-sorteo-cliente {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+
+    padding: 7px 13px;
+    margin-top: 7px;
+    border-radius: 6px;
+
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+
+    text-align: center;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
+
+    cursor: default;
+}
+
+.etiqueta-oferta-cliente {
+    background: #f57c00;
+}
+
+.etiqueta-sorteo-cliente {
+    background: #28a745;
+}
+
+
+/* =====================================================
+   REACCIÓN
+===================================================== */
+
+#btnCalificar {
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    padding: 5px 10px;
+
+    line-height: 1;
+
+}
+
+#btnCalificar.corazon-latiendo {
+
+    animation:
+        latidoCorazon 0.45s ease;
+
+}
+
+@keyframes latidoCorazon {
+
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.45);
+    }
+
+    55% {
+        transform: scale(1.15);
+    }
+
+    75% {
+        transform: scale(1.35);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+
+    
+}
+
+/* =====================================================
+   RULETA
+===================================================== */
+
+#fondoRuleta {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.70);
+
+    z-index: 19998;
+
+}
+
+
+#ventanaRuletaCliente {
+
+    display: none;
+
+    position: fixed;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width: 94%;
+
+    max-width: 560px;
+
+    max-height: 94vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 15px 50px
+        rgba(0,0,0,0.40);
+
+    z-index: 19999;
+
+    text-align: center;
+
+    margin: 0;
+
+}
+
+
+.encabezado-ruleta-cliente {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom: 10px;
+
+}
+
+
+.encabezado-ruleta-cliente h2 {
+
+    margin: 0;
+
+    font-size: 22px;
+
+    color: #222;
+
+}
+
+
+#btnCerrarRuletaCliente {
+
+    border: none;
+
+    background: #dc2626;
+
+    color: white;
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.texto-ruleta {
+
+    margin: 5px 0 15px;
+
+    font-size: 14px;
+
+    color: #555;
+
+}
+
+
+.contenedor-ruleta-circular {
+
+    position: relative;
+
+    width:
+        min(86vw, 420px);
+
+    height:
+        min(86vw, 420px);
+
+    max-width: 420px;
+
+    max-height: 420px;
+
+    margin:
+        10px auto 20px;
+
+}
+
+
+#canvasRuleta {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    border-radius: 50%;
+
+    transform:
+        rotate(0deg);
+
+    transition:
+        transform 5s
+        cubic-bezier(
+            0.12,
+            0.72,
+            0.12,
+            1
+        );
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,0.25);
+
+}
+
+
+.puntero-ruleta {
+
+    position: absolute;
+
+    top: -5px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 0;
+
+    height: 0;
+
+    border-left:
+        18px solid transparent;
+
+    border-right:
+        18px solid transparent;
+
+    border-top:
+        35px solid #dc2626;
+
+    z-index: 10;
+
+    filter:
+        drop-shadow(
+            0 2px 2px
+            rgba(0,0,0,0.30)
+        );
+
+}
+
+
+.centro-ruleta {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width: 70px;
+
+    height: 70px;
+
+    background: white;
+
+    border:
+        7px solid #ff7a00;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+
+    z-index: 5;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0,0,0,0.25);
+
+}
+
+
+#btnGirarRuleta {
+
+    width: 90%;
+
+    max-width: 350px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 13px;
+
+    background: #16a34a;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 10px
+        rgba(0,0,0,0.20);
+
+}
+
+
+#btnGirarRuleta:hover {
+
+    background: #12823b;
+
+    transform:
+        scale(1.03);
+
+}
+
+
+#btnGirarRuleta:disabled {
+
+    background: #999;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+#resultadoRuleta {
+
+    min-height: 30px;
+
+    margin-top: 15px;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    color: #222;
+
+}
+
+
+#detallePremioRuleta {
+
+    display: none;
+
+    margin-top: 12px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #fff7ed;
+
+    border:
+        1px solid #fed7aa;
+
+}
+
+
+#detallePremioRuleta h3 {
+
+    margin:
+        0 0 7px;
+
+    color: #ea580c;
+
+}
+
+
+#detallePremioRuleta p {
+
+    margin: 5px 0;
+
+    font-size: 14px;
+
+}
+
+
+#imagenPremioResultado {
+
+    display: none;
+
+    width: 150px;
+
+    height: 150px;
+
+    object-fit: contain;
+
+    margin: 10px auto;
+
+    border-radius: 12px;
+
+    border:
+        2px solid #ff7a00;
+
+    background: white;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width:500px) {
+
+    #ventanaRuletaCliente {
+
+        width: 96%;
+
+        padding: 15px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .encabezado-ruleta-cliente h2 {
+
+        font-size: 19px;
+
+    }
+
+
+    .texto-ruleta {
+
+        font-size: 13px;
+
+    }
+
+
+    .centro-ruleta {
+
+        width: 58px;
+
+        height: 58px;
+
+        border-width: 6px;
+
+        font-size: 21px;
+
+    }
+
+
+    .puntero-ruleta {
+
+        border-left-width: 15px;
+
+        border-right-width: 15px;
+
+        border-top-width: 30px;
+
+    }
+
+
+    #imagenPremioResultado {
+
+        width: 120px;
+
+        height: 120px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ENCABEZADO CLIENTE
+===================================================== -->
+
+<header class="encabezado-cliente">
+
+
+    <button
+        id="btnCalificar"
+        type="button"
+        onclick="calificarTienda()">
+
+        ❤️
+
+    </button>
+
+
+    <div class="titulo-tienda">
+
+        <h1 id="tituloCliente">
+
+            MI TIENDA
+
+        </h1>
+
+
+        <p id="esloganCliente">
+
+            COMPRA FÁCIL, LUCE INCREÍBLE
+
+        </p>
+
+    </div>
+
+
+    <button
+        id="btnAdmin"
+        onclick="irAlAdmin()">
+
+        ADMIN
+
+    </button>
+
+
+</header>
+
+
+
+<!-- =====================================================
+     PRODUCTOS
+===================================================== -->
+
+<main class="contenido-cliente">
+
+    <div
+        id="productos"
+        class="productos">
+
+        <p class="mensaje-cargando">
+
+            Cargando productos...
+
+        </p>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     FONDO RULETA
+===================================================== -->
+
+<div
+    id="fondoRuleta"
+    onclick="cerrarRuletaCliente()">
+</div>
+
+
+
+<!-- =====================================================
+     RULETA CLIENTE
+===================================================== -->
+
+<div id="ventanaRuletaCliente">
+
+
+    <div class="encabezado-ruleta-cliente">
+
+
+        <h2>
+
+            🎯 RULETA DE PREMIOS
+
+        </h2>
+
+
+        <button
+            id="btnCerrarRuletaCliente"
+            onclick="cerrarRuletaCliente()">
+
+            ✕
+
+        </button>
+
+
+    </div>
+
+
+    <p class="texto-ruleta">
+
+        ¡Gira la ruleta y descubre tu premio! 🎁
+
+    </p>
+
+
+    <div
+        class="contenedor-ruleta-circular">
+
+
+        <div
+            class="puntero-ruleta">
+        </div>
+
+
+        <canvas
+            id="canvasRuleta"
+            width="600"
+            height="600">
+        </canvas>
+
+
+        <div
+            class="centro-ruleta">
+
+            🎯
+
+        </div>
+
+
+    </div>
+
+
+    <button
+        id="btnGirarRuleta"
+        type="button"
+        onclick="girarRuletaCliente()">
+
+        ▶️ JUGAR
+
+    </button>
+
+
+    <div id="resultadoRuleta">
+
+        ¡Mucha suerte! 🍀
+
+    </div>
+
+
+    <div id="detallePremioRuleta">
+
+
+        <img
+            id="imagenPremioResultado"
+            alt="Premio ganado">
+
+
+        <h3
+            id="nombrePremioResultado">
+
+            🎁 Premio
+
+        </h3>
+
+
+        <p
+            id="descripcionPremioResultado">
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     PIE DE PÁGINA
+===================================================== -->
+
+<footer class="pie-cliente">
+
+
+    <p id="pieCliente">
+
+        MI TIENDA ONLINE
+
+    </p>
+
+
+</footer>
+
+
+
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+<script>
+
+/* =====================================================
+   CONEXIÓN SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://yuivmqncvmsbtiigxsqt.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_r1ZMaIIEVcAt26_P-FBu9Q_DUenqDH_";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =====================================================
+   VARIABLES GENERALES
+===================================================== */
+
+let numeroWhatsApp = "";
+
+let mensajeWhatsAppGuardado = "";
+
+
+/* =====================================================
+   TIENDA ACTUAL
+===================================================== */
+
+let tiendaActual = null;
+
+let tiendaIdActual = null;
+
+let tiendaSlugActual = "";
+
+
+/* =====================================================
+   OBTENER TIENDA DESDE LA URL
+===================================================== */
+
+async function cargarTiendaActual() {
+
+    try {
+
+        const parametros =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        tiendaSlugActual =
+            parametros.get("tienda") ||
+            "tienda01";
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("tiendas")
+                .select(
+                    "id, nombre, slug, link, activa"
+                )
+                .eq(
+                    "slug",
+                    tiendaSlugActual
+                )
+                .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error buscando la tienda:",
+                error
+            );
+
+            return false;
+
+        }
+
+
+        if (!data) {
+
+            console.error(
+                "No existe la tienda:",
+                tiendaSlugActual
+            );
+
+            document.body.innerHTML = `
+
+                <div style="
+                    min-height:100vh;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    text-align:center;
+                    padding:30px;
+                    font-family:Arial,sans-serif;
+                ">
+
+                    <div>
+
+                        <h2>
+                            Tienda no encontrada
+                        </h2>
+
+                        <p>
+                            La tienda solicitada no existe.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return false;
+
+        }
+
+
+        if (data.activa !== true) {
+
+            document.body.innerHTML = `
+
+                <div style="
+                    min-height:100vh;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    text-align:center;
+                    padding:30px;
+                    font-family:Arial,sans-serif;
+                ">
+
+                    <div>
+
+                        <h2>
+                            Tienda temporalmente cerrada
+                        </h2>
+
+                        <p>
+                            Esta tienda no se encuentra disponible actualmente.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return false;
+
+        }
+
+
+        tiendaActual =
+            data;
+
+        tiendaIdActual =
+            Number(data.id);
+
+
+        console.log(
+            "🏪 Tienda actual:",
+            tiendaActual.nombre
+        );
+
+        console.log(
+            "🆔 ID de tienda:",
+            tiendaIdActual
+        );
+
+        console.log(
+            "🔗 Slug:",
+            tiendaSlugActual
+        );
+
+
+        return true;
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "Error inesperado buscando tienda:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+/* =====================================================
+   REACCIÓN DEL DASHBOARD
+===================================================== */
+
+let reaccionTiendaActual =
+    "❤️";
+
+
+/* =====================================================
+   APLICAR REACCIÓN DEL DASHBOARD
+===================================================== */
+
+function aplicarReaccionDashboard(
+    reaccion
+) {
+
+    const reaccionFinal =
+        reaccion || "❤️";
+
+
+    reaccionTiendaActual =
+        reaccionFinal;
+
+
+    const boton =
+        document.getElementById(
+            "btnCalificar"
+        );
+
+
+    if (boton) {
+
+        boton.textContent =
+            reaccionFinal;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   CALIFICAR TIENDA
+===================================================== */
+
+async function calificarTienda() {
+
+    /* ================================================
+       ANIMACIÓN INMEDIATA
+    ================================================ */
+
+    const boton =
+        document.getElementById(
+            "btnCalificar"
+        );
+
+
+    if (boton) {
+
+        boton.classList.remove(
+            "corazon-latiendo"
+        );
+
+        void boton.offsetWidth;
+
+        boton.classList.add(
+            "corazon-latiendo"
+        );
+
+        setTimeout(
+            function() {
+
+                boton.classList.remove(
+                    "corazon-latiendo"
+                );
+
+            },
+            500
+        );
+
+    }
+
+
+    /* ================================================
+       FECHA LOCAL
+       Evita problemas con UTC
+    ================================================ */
+
+    const ahora =
+        new Date();
+
+
+    const hoy =
+        ahora.getFullYear() +
+        "-" +
+        String(
+            ahora.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            ahora.getDate()
+        ).padStart(2, "0");
+
+
+    /* ================================================
+       GUARDAR REACCIÓN EN SUPABASE
+    ================================================ */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from(
+
+    "estadisticas_reacciones"
+
+)
+
+.select(
+
+    "id, fecha, cantidad"
+
+)
+
+.eq(
+
+    "fecha",
+
+    hoy
+
+)
+
+.eq(
+
+    "tienda_id",
+
+    tiendaIdActual
+
+)
+
+.order(
+
+    "id",
+
+    {
+
+        ascending: true
+
+    }
+
+)
+
+.limit(1)
+
+.maybeSingle();
+
+       if (error) {
+
+    console.error(
+        "Error buscando estadísticas:",
+        error
+    );
+
+    alert(
+        "❌ ERROR SUPABASE:\n" +
+        error.message
+    );
+
+    return;
+
+}
+        /* ============================================
+           SI YA EXISTE EL REGISTRO DE HOY
+        ============================================ */
+
+        if (data) {
+
+            const nuevaCantidad =
+                Number(
+                    data.cantidad || 0
+                ) + 1;
+
+
+            const {
+                error: errorUpdate
+            } =
+            await supabaseClient
+                .from(
+                    "estadisticas_reacciones"
+                )
+                .update({ 
+    cantidad: 
+        nuevaCantidad 
+}) 
+.eq( 
+    "id", 
+    data.id 
+)
+.eq(
+    "tienda_id",
+    tiendaIdActual
+);
+
+
+            if (errorUpdate) {
+
+                console.error(
+                    "Error actualizando estadísticas:",
+                    errorUpdate
+                );
+
+                alert(
+                    "❌ No se pudo actualizar la reacción."
+                );
+
+                return;
+
+            }
+
+
+            console.log(
+                "Reacción actualizada:",
+                nuevaCantidad
+            );
+
+        }
+
+
+        /* ============================================
+           SI NO EXISTE EL REGISTRO DE HOY
+        ============================================ */
+
+        else {
+
+            const {
+                error: errorInsert
+            } =
+            await supabaseClient
+                .from(
+                    "estadisticas_reacciones"
+                )
+                .insert({
+
+    fecha:
+        hoy,
+
+    cantidad:
+        1,
+
+    tienda_id:
+        tiendaIdActual
+
+});
+
+
+            if (errorInsert) {
+
+                console.error(
+                    "Error creando estadísticas:",
+                    errorInsert
+                );
+
+                alert(
+                    "❌ No se pudo registrar la reacción."
+                );
+
+                return;
+
+            }
+
+
+            console.log(
+                "Primera reacción del día registrada."
+            );
+
+        }
+
+
+        console.log(
+            "✅ Reacción registrada correctamente en Supabase."
+        );
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "❌ Error registrando reacción:",
+            error
+        );
+
+        alert(
+            "❌ Ocurrió un error al registrar la reacción."
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   IR AL ADMIN
+===================================================== */
+function irAlAdmin() {
+
+    window.location.href =
+        "admin-login.html?tienda=" +
+        encodeURIComponent(
+            tiendaSlugActual
+        );
+
+}
+
+/* =====================================================
+   OBTENER FECHA DEL PRODUCTO
+===================================================== */
+
+function obtenerFechaProducto(
+    producto
+) {
+
+    if (!producto) {
+
+        return 0;
+
+    }
+
+
+    const posiblesFechas = [
+
+        producto.creado_en,
+
+        producto.creadoEn,
+
+        producto.fecha_creacion,
+
+        producto.fechaCreacion,
+
+        producto.fecha_publicacion,
+
+        producto.fechaPublicacion,
+
+        producto.created_at,
+
+        producto.createdAt
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < posiblesFechas.length;
+        i++
+    ) {
+
+        if (
+            posiblesFechas[i] !== undefined &&
+            posiblesFechas[i] !== null &&
+            posiblesFechas[i] !== ""
+        ) {
+
+            const fecha =
+                new Date(
+                    posiblesFechas[i]
+                ).getTime();
+
+
+            if (!isNaN(fecha)) {
+
+                return fecha;
+
+            }
+
+        }
+
+    }
+
+
+    return 0;
+
+}
+
+
+
+/* =====================================================
+   PREPARAR WHATSAPP
+===================================================== */
+
+function prepararNumeroWhatsApp(
+    numero
+) {
+
+    if (!numero) {
+
+        return "";
+
+    }
+
+
+    numero =
+        String(numero).trim();
+
+
+    numero =
+        numero.replace(
+            /\D/g,
+            ""
+        );
+
+
+    if (
+        numero.startsWith("51")
+    ) {
+
+        return numero;
+
+    }
+
+
+    if (
+        numero.length === 9
+    ) {
+
+        return "51" + numero;
+
+    }
+
+
+    return numero;
+
+}
+
+
+
+/* =====================================================
+   CONFIGURACIÓN CLIENTE
+===================================================== */
+
+async function cargarConfiguracionCliente() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+
+    .from(
+        "configuracion_tienda"
+    )
+
+    .select("*")
+
+    .eq(
+        "tienda_id",
+        tiendaIdActual
+    )
+
+    .limit(1)
+
+    .maybeSingle();
+
+        if (error) {
+
+            console.error(
+                "Error cargando configuración:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        if (!data) {
+
+            console.log(
+                "No existe configuración de tienda."
+            );
+
+
+            aplicarReaccionDashboard(
+                "❤️"
+            );
+
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           WHATSAPP
+        ================================================= */
+
+        const whatsapp =
+            data.whatsapp ||
+            data.whatsapp_numero ||
+            data.numero_whatsapp ||
+            data.telefono_whatsapp ||
+            data.telefono ||
+            data.celular ||
+            data.numero ||
+            "";
+
+
+        numeroWhatsApp =
+            prepararNumeroWhatsApp(
+                whatsapp
+            );
+
+
+        mensajeWhatsAppGuardado =
+            data.whatsapp_mensaje ||
+            data.mensaje_whatsapp ||
+            data.mensaje ||
+            data.mensajeWhatsApp ||
+            data.texto_whatsapp ||
+            data.textoWhatsApp ||
+            "";
+
+
+
+        /* =================================================
+           REACCIÓN DEL DASHBOARD
+        ================================================= */
+
+        const reaccionDashboard =
+            data.reaccion_dashboard ||
+            "❤️";
+
+
+        aplicarReaccionDashboard(
+            reaccionDashboard
+        );
+
+
+
+        /* =================================================
+           TÍTULO
+        ================================================= */
+
+        const titulo =
+            data.titulo_cliente ||
+            data.tituloCliente ||
+            data.titulo_cliente_tienda ||
+            data.titulo ||
+            null;
+
+
+        if (titulo) {
+
+            const elemento =
+                document.getElementById(
+                    "tituloCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.textContent =
+                    titulo;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           ESLOGAN
+        ================================================= */
+
+        const eslogan =
+            data.eslogan_cliente ||
+            data.esloganCliente ||
+            data.slogan_cliente ||
+            data.eslogan ||
+            data.slogan ||
+            null;
+
+
+        if (eslogan) {
+
+            const elemento =
+                document.getElementById(
+                    "esloganCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.textContent =
+                    eslogan;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           PIE
+        ================================================= */
+
+        const pie =
+            data.pie_cliente ||
+            data.pieCliente ||
+            data.footer_cliente ||
+            data.footer ||
+            null;
+
+
+        if (pie) {
+
+            const elemento =
+                document.getElementById(
+                    "pieCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.textContent =
+                    pie;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           COLOR
+        ================================================= */
+
+        const color =
+            data.color_cliente ||
+            data.colorCliente ||
+            data.color_tienda ||
+            data.color ||
+            null;
+
+
+        if (color) {
+
+            aplicarColorCliente(
+                color
+            );
+
+        }
+
+
+
+        /* =================================================
+           TIPOGRAFÍA TÍTULO
+        ================================================= */
+
+        const tipografiaTitulo =
+            data.tipografia_titulo_cliente ||
+            data.tipografiaTituloCliente ||
+            data.tipografia_titulo ||
+            data.tipografia_cliente_titulo ||
+            null;
+
+
+        if (tipografiaTitulo) {
+
+            const elemento =
+                document.getElementById(
+                    "tituloCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.style.fontFamily =
+                    tipografiaTitulo;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           TIPOGRAFÍA ESLOGAN
+        ================================================= */
+
+        const tipografiaEslogan =
+            data.tipografia_eslogan_cliente ||
+            data.tipografiaEsloganCliente ||
+            data.tipografia_eslogan ||
+            data.tipografia_cliente_eslogan ||
+            null;
+
+
+        if (tipografiaEslogan) {
+
+            const elemento =
+                document.getElementById(
+                    "esloganCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.style.fontFamily =
+                    tipografiaEslogan;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           TIPOGRAFÍA PIE
+        ================================================= */
+
+        const tipografiaPie =
+            data.tipografia_pie_cliente ||
+            data.tipografiaPieCliente ||
+            data.tipografia_pie ||
+            data.tipografia_cliente_pie ||
+            null;
+
+
+        if (tipografiaPie) {
+
+            const elemento =
+                document.getElementById(
+                    "pieCliente"
+                );
+
+
+            if (elemento) {
+
+                elemento.style.fontFamily =
+                    tipografiaPie;
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           TIPOGRAFÍA GENERAL
+        ================================================= */
+
+        const tipografiaGeneral =
+            data.tipografia_cliente ||
+            data.tipografiaCliente ||
+            null;
+
+
+        if (tipografiaGeneral) {
+
+            document.body.style.fontFamily =
+                tipografiaGeneral;
+
+        }
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "Error inesperado cargando configuración:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   COLOR CLIENTE
+===================================================== */
+
+function aplicarColorCliente(
+    color
+) {
+
+    const encabezado =
+        document.querySelector(
+            ".encabezado-cliente"
+        );
+
+
+    const pie =
+        document.querySelector(
+            ".pie-cliente"
+        );
+
+
+    if (encabezado) {
+
+        encabezado.style.background =
+            color;
+
+    }
+
+
+    if (pie) {
+
+        pie.style.background =
+            color;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   ACTUALIZAR CONFIGURACIÓN CLIENTE
+===================================================== */
+
+let intervaloConfiguracionCliente =
+    null;
+
+
+function iniciarActualizacionConfiguracionCliente() {
+
+    if (intervaloConfiguracionCliente) {
+
+        clearInterval(
+            intervaloConfiguracionCliente
+        );
+
+    }
+
+
+    intervaloConfiguracionCliente =
+        setInterval(
+            async function() {
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient
+                            .from(
+                                "configuracion_tienda"
+                            )
+                            .select(
+                                "reaccion_dashboard"
+                            )
+                            .limit(1)
+                            .maybeSingle();
+
+
+                    if (error) {
+
+                        console.error(
+                            "Error actualizando reacción:",
+                            error
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (data) {
+
+                        aplicarReaccionDashboard(
+                            data.reaccion_dashboard ||
+                            "❤️"
+                        );
+
+                    }
+
+                }
+
+                catch(error) {
+
+                    console.error(
+                        "Error actualizando configuración cliente:",
+                        error
+                    );
+
+                }
+
+            },
+            5000
+        );
+
+}
+
+
+
+/* =====================================================
+   PEDIDO WHATSAPP
+===================================================== */
+
+function crearPedidoWhatsApp(
+    producto
+) {
+
+    if (!numeroWhatsApp) {
+
+        alert(
+            "No se ha configurado el número de WhatsApp de la tienda."
+        );
+
+        return;
+
+    }
+
+
+    const nombre =
+        producto.nombre ||
+        "Producto";
+
+
+    const talla =
+        producto.talla ||
+        "-";
+
+
+    const color =
+        producto.color ||
+        "-";
+
+
+    const precio =
+        producto.precio ||
+        "0.00";
+
+
+    const mensajeBase =
+        mensajeWhatsAppGuardado ||
+        "Hola, quiero pedir este producto.";
+
+
+    let premioGanado =
+        "";
+
+
+    try {
+
+        premioGanado =
+            sessionStorage.getItem(
+                "premioGanadoRuleta"
+            ) || "";
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error leyendo premio:",
+            error
+        );
+
+    }
+
+
+    let mensaje =
+        mensajeBase +
+        "\n\n" +
+        "Producto: " +
+        nombre +
+        "\n" +
+        "Precio: S/ " +
+        precio +
+        "\n" +
+        "Talla: " +
+        talla +
+        "\n" +
+        "Color: " +
+        color;
+
+
+    if (
+        producto.tipo === "oferta"
+    ) {
+
+        mensaje +=
+            "\n" +
+            "🟠 Producto de OFERTA";
+
+    }
+
+
+    if (
+        producto.tipo === "sorteo"
+    ) {
+
+        mensaje +=
+            "\n" +
+            "🟢 Producto de SORTEO";
+
+    }
+
+
+    if (premioGanado) {
+
+        mensaje +=
+            "\n" +
+            "🎁 Premio ganado en la ruleta: " +
+            premioGanado;
+
+    }
+
+
+    const enlace =
+        "https://wa.me/" +
+        numeroWhatsApp +
+        "?text=" +
+        encodeURIComponent(
+            mensaje
+        );
+
+
+    window.open(
+        enlace,
+        "_blank"
+    );
+
+}
+
+
+
+/* =====================================================
+   CREAR TARJETA PRODUCTO
+===================================================== */
+
+function crearTarjetaProducto(
+    producto,
+    contenedor
+) {
+
+    const tarjeta =
+        document.createElement(
+            "div"
+        );
+
+
+    tarjeta.className =
+        "producto";
+
+
+    const imagen =
+        document.createElement(
+            "img"
+        );
+
+
+    imagen.src =
+        producto.imagen || "";
+
+
+    imagen.alt =
+        producto.nombre ||
+        "Producto";
+
+
+    tarjeta.appendChild(
+        imagen
+    );
+
+
+
+    const nombre =
+        document.createElement(
+            "h3"
+        );
+
+
+    nombre.textContent =
+        producto.nombre ||
+        "Producto";
+
+
+    tarjeta.appendChild(
+        nombre
+    );
+
+
+
+    const precio =
+        document.createElement(
+            "p"
+        );
+
+
+    precio.className =
+        "precio";
+
+
+    precio.textContent =
+        "S/ " +
+        Number(
+            producto.precio || 0
+        ).toFixed(2);
+
+
+    tarjeta.appendChild(
+        precio
+    );
+
+
+
+    const color =
+        document.createElement(
+            "p"
+        );
+
+
+    color.className =
+        "dato-producto";
+
+
+    color.textContent =
+        "Color: " +
+        (
+            producto.color ||
+            "-"
+        );
+
+
+    tarjeta.appendChild(
+        color
+    );
+
+
+
+    const talla =
+        document.createElement(
+            "p"
+        );
+
+
+    talla.className =
+        "dato-producto";
+
+
+    talla.textContent =
+        "Talla: " +
+        (
+            producto.talla ||
+            "-"
+        );
+
+
+    tarjeta.appendChild(
+        talla
+    );
+
+
+
+    const contenedorBotones =
+        document.createElement(
+            "div"
+        );
+
+
+    contenedorBotones.className =
+        "contenedor-botones-producto";
+
+
+
+    const pedir =
+        document.createElement(
+            "button"
+        );
+
+
+    pedir.className =
+        "btn-pedir";
+
+
+    pedir.type =
+        "button";
+
+
+    pedir.textContent =
+        "PEDIR";
+
+
+    pedir.addEventListener(
+        "click",
+        function() {
+
+            crearPedidoWhatsApp(
+                producto
+            );
+
+        }
+    );
+
+
+    contenedorBotones.appendChild(
+        pedir
+    );
+
+
+
+    if (
+        producto.tipo === "oferta"
+    ) {
+
+        const etiqueta =
+            document.createElement(
+                "div"
+            );
+
+
+        etiqueta.className =
+            "etiqueta-oferta-cliente";
+
+
+        etiqueta.textContent =
+            "🟠 OFERTA";
+
+
+        contenedorBotones.appendChild(
+            etiqueta
+        );
+
+    }
+
+
+
+    if (
+        producto.tipo === "sorteo"
+    ) {
+
+        const etiqueta =
+            document.createElement(
+                "div"
+            );
+
+
+        etiqueta.className =
+            "etiqueta-sorteo-cliente";
+
+
+        etiqueta.textContent =
+            "🟢 SORTEO";
+
+
+        contenedorBotones.appendChild(
+            etiqueta
+        );
+
+    }
+
+
+    tarjeta.appendChild(
+        contenedorBotones
+    );
+
+
+    contenedor.appendChild(
+        tarjeta
+    );
+
+}
+
+
+
+/* =====================================================
+   CARGAR PRODUCTOS + OFERTAS
+===================================================== */
+
+async function cargarProductosCliente() {
+
+    const contenedor =
+        document.getElementById(
+            "productos"
+        );
+
+
+    if (!contenedor) {
+
+        return;
+
+    }
+
+
+    contenedor.innerHTML = `
+
+        <p class="mensaje-cargando">
+            Cargando productos...
+        </p>
+
+    `;
+
+
+    try {
+
+
+        /* PRODUCTOS NORMALES */
+const { 
+    data: productosData, 
+    error: productosError 
+} = 
+    await supabaseClient 
+        .from("productos") 
+        .select("*") 
+        .eq( 
+            "activo", 
+            true 
+        )
+        .eq(
+            "tienda_id",
+            tiendaIdActual
+        );
+
+
+        if (productosError) {
+
+            console.error(
+                "Error cargando productos:",
+                productosError
+            );
+
+
+            contenedor.innerHTML = `
+
+                <p class="mensaje-error">
+                    No se pudieron cargar los productos.
+                </p>
+
+            `;
+
+
+            return;
+
+        }
+
+
+        const productos =
+            Array.isArray(
+                productosData
+            )
+                ? productosData
+                : [];
+
+
+
+        /* OFERTAS Y SORTEOS */
+
+        let ofertas = [];
+
+
+       const {
+
+    data: ofertasData,
+
+    error: ofertasError
+
+} =
+
+    await supabaseClient
+
+        .from("ofertas")
+
+        .select("*")
+
+        .eq(
+            "activo",
+            true
+        )
+        .eq(
+            "tienda_id",
+            tiendaIdActual
+        );
+
+        if (ofertasError) {
+
+            console.error(
+                "Error cargando ofertas:",
+                ofertasError
+            );
+
+        }
+
+        else {
+
+            ofertas =
+                Array.isArray(
+                    ofertasData
+                )
+                    ? ofertasData
+                    : [];
+
+        }
+
+
+
+        /* UNIR TODO */
+
+        const todosLosProductos = [
+
+            ...productos,
+
+            ...ofertas
+
+        ];
+
+
+
+        /* ORDENAR POR FECHA */
+
+        todosLosProductos.sort(
+            function(a, b) {
+
+                const fechaA =
+                    obtenerFechaProducto(
+                        a
+                    );
+
+
+                const fechaB =
+                    obtenerFechaProducto(
+                        b
+                    );
+
+
+                return fechaB -
+                       fechaA;
+
+            }
+        );
+
+
+
+        contenedor.innerHTML =
+            "";
+
+
+
+        if (
+            todosLosProductos.length === 0
+        ) {
+
+            contenedor.innerHTML = `
+
+                <p class="mensaje-vacio">
+                    Todavía no hay productos publicados.
+                </p>
+
+            `;
+
+
+            return;
+
+        }
+
+
+
+        todosLosProductos.forEach(
+            function(producto) {
+
+                crearTarjetaProducto(
+                    producto,
+                    contenedor
+                );
+
+            }
+        );
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "Error inesperado:",
+            error
+        );
+
+
+        contenedor.innerHTML = `
+
+            <p class="mensaje-error">
+                Error al conectar con la tienda.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   RULETA
+===================================================== */
+
+let premiosRuleta = [
+
+    {
+        numero: 1,
+        tipo: "texto",
+        nombre: "PREMIO 1",
+        texto: "PREMIO 1",
+        imagen: "",
+        modo: "cantidad",
+        cantidad: 1,
+        descripcion: ""
+    },
+
+    {
+        numero: 2,
+        tipo: "texto",
+        nombre: "PREMIO 2",
+        texto: "PREMIO 2",
+        imagen: "",
+        modo: "cantidad",
+        cantidad: 1,
+        descripcion: ""
+    },
+
+    {
+        numero: 3,
+        tipo: "texto",
+        nombre: "PREMIO 3",
+        texto: "PREMIO 3",
+        imagen: "",
+        modo: "cantidad",
+        cantidad: 1,
+        descripcion: ""
+    },
+
+    {
+        numero: 4,
+        tipo: "texto",
+        nombre: "PREMIO 4",
+        texto: "PREMIO 4",
+        imagen: "",
+        modo: "cantidad",
+        cantidad: 1,
+        descripcion: ""
+    }
+
+];
+
+
+let ruletaActivaCliente =
+    false;
+
+
+let rotacionRuleta =
+    0;
+
+
+let ruletaGirando =
+    false;
+
+
+let premioGanadoRuleta =
+    "";
+
+
+
+/* =====================================================
+   CARGAR RULETA SUPABASE
+===================================================== */
+
+async function cargarConfiguracionRuletaCliente() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from(
+    "configuracion_ruleta"
+)
+.select("*")
+.eq(
+    "tienda_id",
+    tiendaIdActual
+)
+.limit(1)
+.maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error cargando ruleta:",
+                error
+            );
+
+
+            return false;
+
+        }
+
+
+        if (!data) {
+
+            ruletaActivaCliente =
+                false;
+
+
+            return false;
+
+        }
+
+
+        ruletaActivaCliente =
+            data.activa === true;
+
+
+        if (
+            Array.isArray(
+                data.premios
+            )
+        ) {
+
+            premiosRuleta =
+                data.premios
+                    .slice(0,4)
+                    .map(
+                        function(
+                            premio,
+                            indice
+                        ) {
+
+                            const premioOriginal =
+                                premio || {};
+
+
+                            const producto =
+                                premioOriginal.producto ||
+                                premioOriginal.product ||
+                                premioOriginal.item ||
+                                {};
+
+
+                            const imagen =
+                                premioOriginal.imagen ||
+                                premioOriginal.image ||
+                                premioOriginal.foto ||
+                                premioOriginal.foto_producto ||
+                                premioOriginal.imagen_producto ||
+                                premioOriginal.url_imagen ||
+                                premioOriginal.urlImagen ||
+                                premioOriginal.image_url ||
+                                premioOriginal.imageUrl ||
+                                producto.imagen ||
+                                producto.image ||
+                                producto.foto ||
+                                producto.foto_producto ||
+                                producto.imagen_producto ||
+                                producto.url_imagen ||
+                                producto.urlImagen ||
+                                producto.image_url ||
+                                producto.imageUrl ||
+                                "";
+
+
+                            const nombre =
+                                premioOriginal.nombre ||
+                                premioOriginal.texto ||
+                                premioOriginal.nombre_producto ||
+                                premioOriginal.nombreProducto ||
+                                producto.nombre ||
+                                producto.nombre_producto ||
+                                producto.nombreProducto ||
+                                "PREMIO " +
+                                (indice + 1);
+
+
+                            return {
+
+                                numero:
+                                    premioOriginal.numero ||
+                                    indice + 1,
+
+                                tipo:
+                                    premioOriginal.tipo ||
+                                    (
+                                        imagen
+                                            ? "imagen"
+                                            : "texto"
+                                    ),
+
+                                nombre:
+                                    nombre,
+
+                                texto:
+                                    premioOriginal.texto ||
+                                    nombre,
+
+                                imagen:
+                                    imagen,
+
+                                modo:
+                                    premioOriginal.modo ||
+                                    "cantidad",
+
+                                cantidad:
+                                    Number(
+                                        premioOriginal.cantidad
+                                    ) || 1,
+
+                                descripcion:
+                                    premioOriginal.descripcion ||
+                                    producto.descripcion ||
+                                    "",
+
+                                producto:
+                                    producto,
+
+                                original:
+                                    premioOriginal
+
+                            };
+
+                        }
+                    );
+
+        }
+
+
+        while (
+            premiosRuleta.length < 4
+        ) {
+
+            const numero =
+                premiosRuleta.length + 1;
+
+
+            premiosRuleta.push({
+
+                numero:
+                    numero,
+
+                tipo:
+                    "texto",
+
+                nombre:
+                    "PREMIO " +
+                    numero,
+
+                texto:
+                    "PREMIO " +
+                    numero,
+
+                imagen:
+                    "",
+
+                modo:
+                    "cantidad",
+
+                cantidad:
+                    1,
+
+                descripcion:
+                    "",
+
+                producto:
+                    {},
+
+                original:
+                    {}
+
+            });
+
+        }
+
+
+        return true;
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "Error inesperado ruleta:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   NOMBRE PREMIO
+===================================================== */
+
+function obtenerNombrePremio(
+    premio,
+    numero
+) {
+
+    if (!premio) {
+
+        return "PREMIO " +
+            numero;
+
+    }
+
+
+    return (
+        premio.nombre ||
+        premio.texto ||
+        "PREMIO " +
+        numero
+    );
+
+}
+
+
+
+/* =====================================================
+   IMAGEN RULETA
+===================================================== */
+
+function cargarImagenRuleta(
+    src
+) {
+
+    return new Promise(
+        function(resolve) {
+
+            if (!src) {
+
+                resolve(null);
+
+                return;
+
+            }
+
+
+            const imagen =
+                new Image();
+
+
+            imagen.onload =
+                function() {
+
+                    resolve(
+                        imagen
+                    );
+
+                };
+
+
+            imagen.onerror =
+                function() {
+
+                    resolve(null);
+
+                };
+
+
+            imagen.src =
+                src;
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   DIBUJAR RULETA
+===================================================== */
+
+async function dibujarRuleta() {
+
+    const canvas =
+        document.getElementById(
+            "canvasRuleta"
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    const centroX =
+        canvas.width / 2;
+
+
+    const centroY =
+        canvas.height / 2;
+
+
+    const radio =
+        285;
+
+
+    const cantidad =
+        4;
+
+
+    const angulo =
+        (
+            Math.PI * 2
+        ) /
+        cantidad;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    const colores = [
+
+        "#ff7a00",
+
+        "#2563eb",
+
+        "#16a34a",
+
+        "#dc2626"
+
+    ];
+
+
+    const imagenesPremios = [];
+
+
+    for (
+        let i = 0;
+        i < cantidad;
+        i++
+    ) {
+
+        const premio =
+            premiosRuleta[i] || {};
+
+
+        let src = "";
+
+
+        if (
+            typeof premio.imagen ===
+            "string"
+        ) {
+
+            src =
+                premio.imagen.trim();
+
+        }
+
+
+        if (!src) {
+
+            const original =
+                premio.original || {};
+
+
+            const producto =
+                premio.producto ||
+                premio.product ||
+                premio.item ||
+                {};
+
+
+            src =
+                original.imagen ||
+                original.image ||
+                original.foto ||
+                original.foto_producto ||
+                original.imagen_producto ||
+                original.url_imagen ||
+                original.urlImagen ||
+                original.image_url ||
+                original.imageUrl ||
+                producto.imagen ||
+                producto.image ||
+                producto.foto ||
+                producto.foto_producto ||
+                producto.imagen_producto ||
+                producto.url_imagen ||
+                producto.urlImagen ||
+                producto.image_url ||
+                producto.imageUrl ||
+                "";
+
+        }
+
+
+        if (src) {
+
+            const imagen =
+                await cargarImagenRuleta(
+                    src
+                );
+
+
+            imagenesPremios[i] =
+                imagen;
+
+        }
+
+        else {
+
+            imagenesPremios[i] =
+                null;
+
+        }
+
+    }
+
+
+
+    for (
+        let i = 0;
+        i < cantidad;
+        i++
+    ) {
+
+        const inicio =
+            -Math.PI / 2 +
+            i * angulo;
+
+
+        const fin =
+            inicio + angulo;
+
+
+        const premio =
+            premiosRuleta[i] || {
+
+                numero:
+                    i + 1,
+
+                tipo:
+                    "texto",
+
+                nombre:
+                    "PREMIO " +
+                    (i + 1),
+
+                texto:
+                    "PREMIO " +
+                    (i + 1),
+
+                imagen:
+                    ""
+
+            };
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            centroX,
+            centroY
+        );
+
+
+        ctx.arc(
+            centroX,
+            centroY,
+            radio,
+            inicio,
+            fin
+        );
+
+
+        ctx.closePath();
+
+
+        ctx.fillStyle =
+            colores[
+                i %
+                colores.length
+            ];
+
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            "#ffffff";
+
+
+        ctx.lineWidth =
+            7;
+
+
+        ctx.stroke();
+
+
+        const anguloCentro =
+            inicio +
+            angulo / 2;
+
+
+        const contenidoX =
+            centroX +
+            Math.cos(
+                anguloCentro
+            ) * 175;
+
+
+        const contenidoY =
+            centroY +
+            Math.sin(
+                anguloCentro
+            ) * 175;
+
+
+        let texto =
+            obtenerNombrePremio(
+                premio,
+                i + 1
+            );
+
+
+        if (
+            texto.length > 18
+        ) {
+
+            texto =
+                texto.substring(
+                    0,
+                    18
+                ) +
+                "...";
+
+        }
+
+
+        ctx.save();
+
+
+        ctx.translate(
+            contenidoX,
+            contenidoY
+        );
+
+
+        ctx.rotate(
+            anguloCentro
+        );
+
+
+        const imagen =
+            imagenesPremios[i];
+
+
+        if (imagen) {
+
+            const tamañoImagen =
+                115;
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                0,
+                -42,
+                62,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                "#ffffff";
+
+
+            ctx.fill();
+
+
+            ctx.strokeStyle =
+                "#ffffff";
+
+
+            ctx.lineWidth =
+                4;
+
+
+            ctx.stroke();
+
+
+            ctx.save();
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                0,
+                -42,
+                56,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.clip();
+
+
+            const proporcion =
+                Math.min(
+                    tamañoImagen /
+                        imagen.width,
+
+                    tamañoImagen /
+                        imagen.height
+                );
+
+
+            const ancho =
+                imagen.width *
+                proporcion;
+
+
+            const alto =
+                imagen.height *
+                proporcion;
+
+
+            ctx.drawImage(
+                imagen,
+                -ancho / 2,
+                -42 -
+                    alto / 2,
+                ancho,
+                alto
+            );
+
+
+            ctx.restore();
+
+        }
+
+
+        ctx.fillStyle =
+            "#ffffff";
+
+
+        ctx.font =
+            "bold 18px Arial";
+
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.shadowColor =
+            "rgba(0,0,0,0.50)";
+
+
+        ctx.shadowBlur =
+            4;
+
+
+        ctx.shadowOffsetX =
+            1;
+
+
+        ctx.shadowOffsetY =
+            1;
+
+
+        ctx.fillText(
+            texto,
+            0,
+            65
+        );
+
+
+        ctx.shadowColor =
+            "transparent";
+
+
+        ctx.restore();
+
+    }
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        centroX,
+        centroY,
+        radio,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.strokeStyle =
+        "#222";
+
+
+    ctx.lineWidth =
+        8;
+
+
+    ctx.stroke();
+
+}
+
+
+
+/* =====================================================
+   ABRIR RULETA
+===================================================== */
+
+async function abrirRuletaCliente() {
+
+    const cargada =
+        await cargarConfiguracionRuletaCliente();
+
+
+    if (!cargada) {
+
+        return;
+
+    }
+
+
+    if (!ruletaActivaCliente) {
+
+        cerrarRuletaCliente();
+
+        return;
+
+    }
+
+
+    premioGanadoRuleta =
+        "";
+
+
+    try {
+
+        sessionStorage.removeItem(
+            "premioGanadoRuleta"
+        );
+
+    }
+
+    catch(error) {}
+
+
+    const ventana =
+        document.getElementById(
+            "ventanaRuletaCliente"
+        );
+
+
+    const fondo =
+        document.getElementById(
+            "fondoRuleta"
+        );
+
+
+    const boton =
+        document.getElementById(
+            "btnGirarRuleta"
+        );
+
+
+    const resultado =
+        document.getElementById(
+            "resultadoRuleta"
+        );
+
+
+    const detalle =
+        document.getElementById(
+            "detallePremioRuleta"
+        );
+
+
+    const imagenResultado =
+        document.getElementById(
+            "imagenPremioResultado"
+        );
+
+
+    ruletaGirando =
+        false;
+
+
+    rotacionRuleta =
+        0;
+
+
+    if (fondo) {
+
+        fondo.style.display =
+            "block";
+
+    }
+
+
+    if (ventana) {
+
+        ventana.style.display =
+            "block";
+
+    }
+
+
+    const canvas =
+        document.getElementById(
+            "canvasRuleta"
+        );
+
+
+    if (canvas) {
+
+        canvas.style.transition =
+            "none";
+
+
+        canvas.style.transform =
+            "rotate(0deg)";
+
+
+        void canvas.offsetWidth;
+
+
+        canvas.style.transition =
+            "transform 5s cubic-bezier(0.12,0.72,0.12,1)";
+
+    }
+
+
+    if (resultado) {
+
+        resultado.textContent =
+            "¡Mucha suerte! 🍀";
+
+    }
+
+
+    if (detalle) {
+
+        detalle.style.display =
+            "none";
+
+    }
+
+
+    if (imagenResultado) {
+
+        imagenResultado.style.display =
+            "none";
+
+
+        imagenResultado.removeAttribute(
+            "src"
+        );
+
+    }
+
+
+    if (boton) {
+
+        boton.disabled =
+            false;
+
+
+        boton.textContent =
+            "▶️ JUGAR";
+
+    }
+
+
+    await dibujarRuleta();
+
+}
+
+
+
+/* =====================================================
+   CERRAR RULETA
+===================================================== */
+
+function cerrarRuletaCliente() {
+
+    const ventana =
+        document.getElementById(
+            "ventanaRuletaCliente"
+        );
+
+
+    const fondo =
+        document.getElementById(
+            "fondoRuleta"
+        );
+
+
+    if (ventana) {
+
+        ventana.style.display =
+            "none";
+
+    }
+
+
+    if (fondo) {
+
+        fondo.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   GIRAR RULETA
+===================================================== */
+
+function girarRuletaCliente() {
+
+    if (ruletaGirando) {
+
+        return;
+
+    }
+
+
+    if (!ruletaActivaCliente) {
+
+        return;
+
+    }
+
+
+    const canvas =
+        document.getElementById(
+            "canvasRuleta"
+        );
+
+
+    const boton =
+        document.getElementById(
+            "btnGirarRuleta"
+        );
+
+
+    const resultado =
+        document.getElementById(
+            "resultadoRuleta"
+        );
+
+
+    const detalle =
+        document.getElementById(
+            "detallePremioRuleta"
+        );
+
+
+    const nombreResultado =
+        document.getElementById(
+            "nombrePremioResultado"
+        );
+
+
+    const descripcionResultado =
+        document.getElementById(
+            "descripcionPremioResultado"
+        );
+
+
+    const imagenResultado =
+        document.getElementById(
+            "imagenPremioResultado"
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
+
+
+    ruletaGirando =
+        true;
+
+
+    if (boton) {
+
+        boton.disabled =
+            true;
+
+
+        boton.textContent =
+            "🎡 GIRANDO...";
+
+    }
+
+
+    if (detalle) {
+
+        detalle.style.display =
+            "none";
+
+    }
+
+
+    if (imagenResultado) {
+
+        imagenResultado.style.display =
+            "none";
+
+
+        imagenResultado.removeAttribute(
+            "src"
+        );
+
+    }
+
+
+    const cantidad =
+        premiosRuleta.length;
+
+
+    const premioGanador =
+        Math.floor(
+            Math.random() *
+            cantidad
+        );
+
+
+    const gradosPorPremio =
+        360 /
+        cantidad;
+
+
+    const centroPremio =
+        premioGanador *
+        gradosPorPremio +
+        gradosPorPremio / 2;
+
+
+    const actual =
+        (
+            (
+                rotacionRuleta %
+                360
+            ) + 360
+        ) % 360;
+
+
+    let ajuste =
+        360 -
+        centroPremio -
+        actual;
+
+
+    if (ajuste < 0) {
+
+        ajuste +=
+            360;
+
+    }
+
+
+    const vueltas =
+        5 +
+        Math.floor(
+            Math.random() * 3
+        );
+
+
+    rotacionRuleta +=
+        vueltas * 360 +
+        ajuste;
+
+
+    canvas.style.transform =
+        "rotate(" +
+        rotacionRuleta +
+        "deg)";
+
+
+    setTimeout(
+        function() {
+
+            ruletaGirando =
+                false;
+
+
+            const premio =
+                premiosRuleta[
+                    premioGanador
+                ];
+
+
+            const nombre =
+                obtenerNombrePremio(
+                    premio,
+                    premioGanador + 1
+                );
+
+
+            const texto =
+                premio &&
+                premio.texto
+                    ? premio.texto
+                    : nombre;
+
+
+            premioGanadoRuleta =
+                nombre;
+
+
+            try {
+
+                sessionStorage.setItem(
+                    "premioGanadoRuleta",
+                    nombre
+                );
+
+            }
+
+            catch(error) {}
+
+
+            if (resultado) {
+
+                resultado.textContent =
+                    "🎉 ¡GANASTE: " +
+                    nombre +
+                    "!";
+
+            }
+
+
+            if (nombreResultado) {
+
+                nombreResultado.textContent =
+                    "🎁 " +
+                    nombre;
+
+            }
+
+
+            if (descripcionResultado) {
+
+                descripcionResultado.textContent =
+                    premio &&
+                    premio.descripcion
+                        ? premio.descripcion
+                        : texto;
+
+            }
+
+
+            let imagenPremio =
+                "";
+
+
+            if (premio) {
+
+                const producto =
+                    premio.producto ||
+                    premio.product ||
+                    premio.item ||
+                    {};
+
+
+                const original =
+                    premio.original ||
+                    {};
+
+
+                imagenPremio =
+                    premio.imagen ||
+                    premio.image ||
+                    premio.foto ||
+                    premio.foto_producto ||
+                    premio.imagen_producto ||
+                    premio.url_imagen ||
+                    premio.urlImagen ||
+                    premio.image_url ||
+                    premio.imageUrl ||
+                    original.imagen ||
+                    original.image ||
+                    original.foto ||
+                    original.foto_producto ||
+                    original.imagen_producto ||
+                    original.url_imagen ||
+                    original.urlImagen ||
+                    original.image_url ||
+                    original.imageUrl ||
+                    producto.imagen ||
+                    producto.image ||
+                    producto.foto ||
+                    producto.foto_producto ||
+                    producto.imagen_producto ||
+                    producto.url_imagen ||
+                    producto.urlImagen ||
+                    producto.image_url ||
+                    producto.imageUrl ||
+                    "";
+
+            }
+
+
+            if (
+                imagenResultado &&
+                imagenPremio
+            ) {
+
+                imagenResultado.onload =
+                    function() {
+
+                        imagenResultado.style.display =
+                            "block";
+
+                    };
+
+
+                imagenResultado.onerror =
+                    function() {
+
+                        console.error(
+                            "No se pudo cargar la imagen del premio:",
+                            imagenPremio
+                        );
+
+
+                        imagenResultado.style.display =
+                            "none";
+
+                    };
+
+
+                imagenResultado.src =
+                    imagenPremio;
+
+
+                if (
+                    imagenResultado.complete &&
+                    imagenResultado.naturalWidth > 0
+                ) {
+
+                    imagenResultado.style.display =
+                        "block";
+
+                }
+
+            }
+
+
+            if (detalle) {
+
+                detalle.style.display =
+                    "block";
+
+            }
+
+
+            setTimeout(
+                function() {
+
+                    cerrarRuletaCliente();
+
+                },
+                3000
+            );
+
+        },
+        5200
+    );
+
+}
+
+
+
+/* =====================================================
+   COMPROBAR RULETA
+===================================================== */
+
+async function comprobarEstadoRuleta() {
+
+    const cargada =
+        await cargarConfiguracionRuletaCliente();
+
+
+    if (!cargada) {
+
+        cerrarRuletaCliente();
+
+        return;
+
+    }
+
+
+    if (ruletaActivaCliente) {
+
+        await abrirRuletaCliente();
+
+    }
+
+    else {
+
+        cerrarRuletaCliente();
+
+    }
+
+}
+
+
+
+/* =====================================================
+   ACTUALIZAR RULETA
+===================================================== */
+
+let intervaloRuletaSupabase =
+    null;
+
+
+function iniciarActualizacionRuleta() {
+
+    if (intervaloRuletaSupabase) {
+
+        clearInterval(
+            intervaloRuletaSupabase
+        );
+
+    }
+
+
+    intervaloRuletaSupabase =
+        setInterval(
+            async function() {
+
+                try {
+
+                    const estadoAnterior =
+                        ruletaActivaCliente;
+
+
+                    const cargada =
+                        await cargarConfiguracionRuletaCliente();
+
+
+                    if (!cargada) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        estadoAnterior !==
+                        ruletaActivaCliente
+                    ) {
+
+                        if (
+                            ruletaActivaCliente
+                        ) {
+
+                            await abrirRuletaCliente();
+
+                        }
+
+                        else {
+
+                            cerrarRuletaCliente();
+
+                        }
+
+                    }
+
+
+                    else if (
+                        ruletaActivaCliente &&
+                        !ruletaGirando
+                    ) {
+
+                        const ventana =
+                            document.getElementById(
+                                "ventanaRuletaCliente"
+                            );
+
+
+                        if (
+                            ventana &&
+                            ventana.style.display ===
+                            "block"
+                        ) {
+
+                            await dibujarRuleta();
+
+                        }
+
+                    }
+
+                }
+
+
+                catch(error) {
+
+                    console.error(
+                        "Error actualizando ruleta:",
+                        error
+                    );
+
+                }
+
+            },
+            5000
+        );
+
+}
+
+/* =====================================================
+   🎵 MÚSICA DEL CLIENTE
+===================================================== */
+
+let audioMusicaCliente = null;
+
+let configuracionMusicaCliente = null;
+
+let musicaClienteIniciada = false;
+
+let intervaloMusicaCliente = null;
+
+let ultimaConfiguracionMusicaCliente = "";
+
+
+/* =====================================================
+   DETENER MÚSICA
+===================================================== */
+
+function detenerMusicaCliente() {
+
+    if (audioMusicaCliente) {
+
+        audioMusicaCliente.pause();
+
+        audioMusicaCliente.currentTime = 0;
+
+        audioMusicaCliente.src = "";
+
+        audioMusicaCliente = null;
+
+    }
+
+    musicaClienteIniciada = false;
+
+}
+
+
+/* =====================================================
+   REPRODUCIR MÚSICA
+===================================================== */
+async function reproducirMusicaCliente() {
+
+    if (
+        !configuracionMusicaCliente ||
+        configuracionMusicaCliente.activa !== true ||
+        !configuracionMusicaCliente.url_musica
+    ) {
+
+        console.log(
+            "🔴 No hay música activa o no existe URL."
+        );
+
+        return;
+
+    }
+
+
+    detenerMusicaCliente();
+
+
+    const inicio =
+        Number(
+            configuracionMusicaCliente.segundo_inicio ?? 0
+        );
+
+
+    const final =
+        Number(
+            configuracionMusicaCliente.segundo_final ?? 60
+        );
+
+
+    const repetir =
+        configuracionMusicaCliente.repeticion !== false;
+
+
+    if (final <= inicio) {
+
+        console.error(
+            "❌ Fragmento inválido:",
+            inicio,
+            final
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "🎵 Intentando reproducir:",
+        configuracionMusicaCliente.url_musica
+    );
+
+
+    const audio =
+        new Audio(
+            configuracionMusicaCliente.url_musica
+        );
+
+
+    audio.preload =
+        "auto";
+
+
+    audioMusicaCliente =
+        audio;
+
+
+    /* =================================================
+       CUANDO TENEMOS LA DURACIÓN
+    ================================================= */
+
+    audio.addEventListener(
+        "loadedmetadata",
+        function() {
+
+            if (
+                !audioMusicaCliente ||
+                audio !== audioMusicaCliente
+            ) {
+
+                return;
+
+            }
+
+
+            console.log(
+                "🎵 Duración del audio:",
+                audio.duration
+            );
+
+
+            if (
+                final > audio.duration
+            ) {
+
+                console.error(
+                    "❌ El segundo final supera la duración."
+                );
+
+                detenerMusicaCliente();
+
+                return;
+
+            }
+
+
+            audio.currentTime =
+                inicio;
+
+        }
+    );
+
+
+    /* =================================================
+       CONTROL DEL FRAGMENTO
+    ================================================= */
+
+    audio.addEventListener(
+        "timeupdate",
+        function() {
+
+            if (
+                !audioMusicaCliente ||
+                audio !== audioMusicaCliente
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                audio.currentTime >=
+                final
+            ) {
+
+                if (repetir) {
+
+                    audio.currentTime =
+                        inicio;
+
+                }
+
+                else {
+
+                    audio.pause();
+
+                    audio.currentTime =
+                        inicio;
+
+                    musicaClienteIniciada =
+                        false;
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       IMPORTANTE:
+       PLAY DIRECTAMENTE
+       DURANTE LA INTERACCIÓN DEL USUARIO
+    ================================================= */
+
+    try {
+
+        await audio.play();
+
+
+        musicaClienteIniciada =
+            true;
+
+
+        console.log(
+            "✅ MÚSICA REPRODUCIÉNDOSE"
+        );
+
+    }
+
+
+    catch(error) {
+
+        musicaClienteIniciada =
+            false;
+
+
+        console.error(
+            "❌ EL NAVEGADOR BLOQUEÓ LA MÚSICA:",
+            error
+        );
+
+    }
+
+}
+
+/* =====================================================
+   CARGAR CONFIGURACIÓN DE MÚSICA
+===================================================== */
+
+async function cargarConfiguracionMusicaCliente() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from(
+    "configuracion_musica"
+)
+.select("*")
+.eq(
+    "tienda_id",
+    tiendaIdActual
+)
+.limit(1)
+.maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "❌ Error cargando música:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        /* =================================================
+           NO HAY CONFIGURACIÓN
+        ================================================= */
+
+        if (!data) {
+
+            configuracionMusicaCliente =
+                null;
+
+            ultimaConfiguracionMusicaCliente =
+                "sin-musica";
+
+            detenerMusicaCliente();
+
+            return;
+
+        }
+
+
+        /* =================================================
+           IDENTIFICAR SI CAMBIÓ LA CONFIGURACIÓN
+        ================================================= */
+
+        const nuevaConfiguracion =
+            JSON.stringify({
+
+                activa:
+                    data.activa === true,
+
+                url_musica:
+                    data.url_musica || "",
+
+                segundo_inicio:
+                    Number(
+                        data.segundo_inicio ?? 0
+                    ),
+
+                segundo_final:
+                    Number(
+                        data.segundo_final ?? 60
+                    ),
+
+                repeticion:
+                    data.repeticion !== false
+
+            });
+
+
+        const huboCambio =
+            nuevaConfiguracion !==
+            ultimaConfiguracionMusicaCliente;
+
+
+        ultimaConfiguracionMusicaCliente =
+            nuevaConfiguracion;
+
+
+        /* =================================================
+           GUARDAR CONFIGURACIÓN
+        ================================================= */
+
+        configuracionMusicaCliente =
+            data;
+
+
+        /* =================================================
+           MÚSICA DESACTIVADA
+        ================================================= */
+
+        if (
+            data.activa !== true ||
+            !data.url_musica
+        ) {
+
+            detenerMusicaCliente();
+
+            console.log(
+                "🔴 Música del cliente desactivada."
+            );
+
+            return;
+
+        }
+
+
+        /* =================================================
+           SI CAMBIÓ LA CONFIGURACIÓN
+        ================================================= */
+
+        if (huboCambio) {
+
+            console.log(
+                "🎵 Nueva configuración de música detectada."
+            );
+
+
+            await reproducirMusicaCliente();
+
+        }
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "❌ Error inesperado cargando música:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   INICIAR MÚSICA CON INTERACCIÓN DEL CLIENTE
+===================================================== */
+
+async function iniciarMusicaClientePorInteraccion() {
+
+    if (
+        musicaClienteIniciada
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !configuracionMusicaCliente ||
+        configuracionMusicaCliente.activa !== true
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !configuracionMusicaCliente.url_musica
+    ) {
+
+        return;
+
+    }
+
+
+    await reproducirMusicaCliente();
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR MÚSICA CADA 5 SEGUNDOS
+===================================================== */
+
+function iniciarActualizacionMusicaCliente() {
+
+    if (
+        intervaloMusicaCliente
+    ) {
+
+        clearInterval(
+            intervaloMusicaCliente
+        );
+
+    }
+
+
+    intervaloMusicaCliente =
+        setInterval(
+            async function() {
+
+                await cargarConfiguracionMusicaCliente();
+
+            },
+            5000
+        );
+
+}
+
+
+/* =====================================================
+   PRIMERA INTERACCIÓN DEL CLIENTE
+===================================================== */
+document.addEventListener(
+    "pointerdown",
+    iniciarMusicaClientePorInteraccion
+);
+document.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+        const tiendaValida =
+            await cargarTiendaActual();
+
+        if (!tiendaValida) {
+            return;
+        }
+
+        await cargarConfiguracionCliente();
+
+        await cargarProductosCliente();
+
+        await comprobarEstadoRuleta();
+
+        await cargarConfiguracionMusicaCliente();
+
+        iniciarActualizacionConfiguracionCliente();
+
+        iniciarActualizacionRuleta();
+
+        iniciarActualizacionMusicaCliente();
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Administrador - Iniciar sesión</title>
+
+<link
+    rel="stylesheet"
+    href="estilos.css"
+>
+```
+
+</head>
+
+<body>
+
+```
+<main class="login">
+
+    <div class="login-box">
+
+        <h1>
+            ADMINISTRADOR
+        </h1>
+
+
+        <!-- =========================
+             TIENDA ACTUAL
+        ========================== -->
+
+        <p
+            id="tiendaLogin"
+            style="
+                text-align:center;
+                font-weight:bold;
+                margin-bottom:15px;
+            "
+        >
+            Cargando tienda...
+        </p>
+
+
+        <!-- =========================
+             USUARIO
+        ========================== -->
+
+        <input
+            type="text"
+            id="usuario"
+            placeholder="Usuario numérico"
+            inputmode="numeric"
+            autocomplete="username"
+        >
+
+
+        <!-- =========================
+             CONTRASEÑA
+        ========================== -->
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            autocomplete="current-password"
+        >
+
+
+        <!-- =========================
+             INGRESAR
+        ========================== -->
+
+        <button
+            type="button"
+            onclick="iniciarSesion()"
+        >
+            INGRESAR
+        </button>
+
+
+        <!-- =========================
+             MENSAJE
+        ========================== -->
+
+        <p id="mensaje"></p>
+
+
+        <!-- =========================
+             VOLVER
+        ========================== -->
+
+        <button
+            type="button"
+            class="volver"
+            onclick="window.location.href='index.html'"
+        >
+            VOLVER A LA TIENDA
+        </button>
+
+    </div>
+
+</main>
+
+
+<!-- =========================
+     SUPABASE
+========================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<!-- =========================
+     DATOS DE LA TIENDA
+========================== -->
+
+<script>
+
+    const parametrosLogin =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const tiendaSlugLogin =
+        parametrosLogin.get("tienda") ||
+        "tienda01";
+
+
+    let tiendaIdLogin = null;
+
+
+    async function cargarTiendaLogin() {
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("tiendas")
+                    .select(
+                        "id, nombre, slug, activa"
+                    )
+                    .eq(
+                        "slug",
+                        tiendaSlugLogin
+                    )
+                    .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "Error buscando tienda:",
+                    error
+                );
+
+                document.getElementById(
+                    "tiendaLogin"
+                ).textContent =
+                    "Error al cargar la tienda";
+
+                return;
+
+            }
+
+
+            if (!data) {
+
+                document.getElementById(
+                    "tiendaLogin"
+                ).textContent =
+                    "Tienda no encontrada";
+
+                return;
+
+            }
+
+
+            tiendaIdLogin =
+                Number(data.id);
+
+
+            document.getElementById(
+                "tiendaLogin"
+            ).textContent =
+                data.nombre;
+
+
+            if (data.activa !== true) {
+
+                document.getElementById(
+                    "tiendaLogin"
+                ).textContent =
+                    data.nombre +
+                    " - TIENDA DESACTIVADA";
+
+            }
+
+
+            console.log(
+                "🏪 Tienda para login:",
+                data.nombre
+            );
+
+            console.log(
+                "🆔 ID tienda:",
+                tiendaIdLogin
+            );
+
+            console.log(
+                "🔗 Slug:",
+                tiendaSlugLogin
+            );
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "Error inesperado:",
+                error
+            );
+
+        }
+
+    }
+
+</script>
+
+
+<!-- =========================
+     TU SCRIPT
+========================== -->
+
+<script src="script.js"></script>
+
+
+<!-- =========================
+     INICIAR
+========================== -->
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function() {
+
+            await cargarTiendaLogin();
+
+        }
+    );
+
+</script>
+```
+
+</body>
+
+</html>
