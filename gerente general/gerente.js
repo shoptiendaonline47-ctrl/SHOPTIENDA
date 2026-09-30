@@ -135,9 +135,8 @@ function crearTiendaHTML(tienda) {
     div.className =
         "tienda";
 
-
-   const linkTienda =
-    "https://shoptiendaonline47-ctrl.github.io/SHOPTIENDA/?tienda=" +
+const linkTienda =
+    "../Tienda/index.html?tienda=" +
     encodeURIComponent(
         tienda.slug
     );
