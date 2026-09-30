@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Gerente General</title>
+
+<link
+    rel="stylesheet"
+    href="gerente.css"
+>
+
+</head>
+
+<body>
+
+<!-- ========================================
+     ENCABEZADO
+======================================== -->
+
+<header class="encabezado">
+
+    <h1>GERENTE GENERAL</h1>
+
+    <div class="nombre">
+        DEYBI
+    </div>
+
+</header>
+
+
+<!-- ========================================
+     MENÚ
+======================================== -->
+
+<nav class="menu">
+
+    <button
+        id="btnTiendas"
+        type="button"
+    >
+        TIENDAS
+    </button>
+
+    <button
+        id="btnClaves"
+        type="button"
+    >
+        CLAVES
+    </button>
+
+    <button
+        id="btnInauguracion"
+        type="button"
+    >
+        INAUGURACIÓN
+    </button>
+
+</nav>
+
+
+<!-- ========================================
+     CONTENIDO
+======================================== -->
+
+<main>
+
+
+    <!-- ========================================
+         TIENDAS
+    ======================================== -->
+
+    <section
+        id="tiendas"
+        class="seccion"
+    >
+
+        <h2>TIENDAS</h2>
+
+
+        <!--
+            LAS TIENDAS SE CARGARÁN
+            AUTOMÁTICAMENTE DESDE SUPABASE
+        -->
+
+        <div
+            class="lista-tiendas"
+            id="listaTiendas"
+        >
+
+            <p id="cargandoTiendas">
+                Cargando tiendas...
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         CLAVES
+    ======================================== -->
+
+    <section
+        id="claves"
+        class="seccion"
+    >
+
+        <h2>CLAVES DE LAS TIENDAS</h2>
+
+
+        <div class="tabla-claves">
+
+
+            <div class="fila-claves encabezado-claves">
+
+                <div>TIENDA</div>
+                <div>USUARIO</div>
+                <div>CONTRASEÑA</div>
+
+            </div>
+
+
+            <div class="fila-claves">
+                <div>Tienda 01</div>
+                <div>tienda01</div>
+                <div>clave01</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 02</div>
+                <div>tienda02</div>
+                <div>clave02</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 03</div>
+                <div>tienda03</div>
+                <div>clave03</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 04</div>
+                <div>tienda04</div>
+                <div>clave04</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 05</div>
+                <div>tienda05</div>
+                <div>clave05</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 06</div>
+                <div>tienda06</div>
+                <div>clave06</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 07</div>
+                <div>tienda07</div>
+                <div>clave07</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 08</div>
+                <div>tienda08</div>
+                <div>clave08</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 09</div>
+                <div>tienda09</div>
+                <div>clave09</div>
+            </div>
+
+            <div class="fila-claves">
+                <div>Tienda 10</div>
+                <div>tienda10</div>
+                <div>clave10</div>
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         INAUGURACIÓN
+    ======================================== -->
+
+    <section
+        id="inauguracion"
+        class="seccion"
+    >
+
+        <h2>INAUGURACIÓN</h2>
+
+
+        <div class="inauguracion-panel">
+
+
+            <div class="seleccion-tienda">
+
+                <label for="tiendaInauguracion">
+                    Seleccionar tienda
+                </label>
+
+
+                <select
+                    id="tiendaInauguracion"
+                >
+
+                    <option value="1">
+                        Tienda 01
+                    </option>
+
+                    <option value="2">
+                        Tienda 02
+                    </option>
+
+                    <option value="3">
+                        Tienda 03
+                    </option>
+
+                    <option value="4">
+                        Tienda 04
+                    </option>
+
+                    <option value="5">
+                        Tienda 05
+                    </option>
+
+                    <option value="6">
+                        Tienda 06
+                    </option>
+
+                    <option value="7">
+                        Tienda 07
+                    </option>
+
+                    <option value="8">
+                        Tienda 08
+                    </option>
+
+                    <option value="9">
+                        Tienda 09
+                    </option>
+
+                    <option value="10">
+                        Tienda 10
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="activar-inauguracion">
+
+
+                <label class="interruptor">
+
+                    <input
+                        type="checkbox"
+                        id="activarInauguracion"
+                    >
+
+                    <span class="deslizador"></span>
+
+                </label>
+
+
+                <div>
+
+                    <strong>
+                        Activar inauguración
+                    </strong>
+
+                    <p id="textoEstadoInauguracion">
+                        Inauguración desactivada
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="mensaje-inauguracion">
+
+                <label for="mensajeInauguracion">
+                    Mensaje de inauguración
+                </label>
+
+
+                <textarea
+                    id="mensajeInauguracion"
+                    placeholder="Escribe el mensaje de inauguración..."
+                ></textarea>
+
+            </div>
+
+
+            <button
+                id="btnGuardarInauguracion"
+                class="btn-guardar"
+                type="button"
+            >
+                GUARDAR INAUGURACIÓN
+            </button>
+
+
+            <p
+                id="confirmacionInauguracion"
+                class="confirmacion"
+            ></p>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- ========================================
+     SUPABASE
+======================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- ========================================
+     JAVASCRIPT
+======================================== -->
+
+<script src="./gerente.js"></script>
+```
+
+</body>
+
+</html>
